@@ -196,6 +196,18 @@ class FiniteDistribution(Distribution[A], ABC):
 
         return Categorical(result)
 
+    def apply_finite(
+        self,
+        f: Callable[[A], FiniteDistribution[B]]
+    ) -> FiniteDistribution[B]:
+        '''Like apply, but for functions which return a FiniteDistribution.'''
+        result: Dict[B, float] = defaultdict(float)
+        for x, p in self:
+            for y, q in f(x):
+                result[y] += p * q
+
+        return Categorical(result)
+
     def sample(self) -> A:
         outcomes = list(self.table().keys())
         weights = list(self.table().values())

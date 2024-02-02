@@ -77,6 +77,13 @@ class TestFiniteDistribution(unittest.TestCase):
         assert_almost_equal(self, greaterThan4,
                             Categorical({True: 1/3, False: 2/3}))
 
+    def test_apply_finite(self):
+        plusOrMinusOne = lambda x: Choose({x + 1, x - 1})
+        diePlusMinusOne = self.die.apply_finite(plusOrMinusOne)
+        p = 1 / 6
+        assert_almost_equal(self, diePlusMinusOne, Categorical(
+            {0: p / 2, 1: p / 2, 2: p, 3: p, 4: p, 5: p, 6: p / 2, 7: p / 2}))
+
     def test_expectation(self):
         self.assertAlmostEqual(self.die.expectation(float), 3.5)
 
